@@ -155,8 +155,22 @@
       }
       .clients-title { font-size: clamp(36px, 11vw, 56px); }
       .clients-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-      .clients-controls { align-self: flex-end; }
-      .client-card { width: clamp(240px, 78vw, 320px); }
+      .clients-controls { display: none !important; }
+
+      /* Stack cards vertically on mobile */
+      .carousel { overflow: visible !important; }
+      .carousel-track {
+        flex-direction: column !important;
+        overflow: visible !important;
+        gap: 16px !important;
+        scroll-snap-type: none !important;
+        cursor: auto !important;
+      }
+      .client-card {
+        width: 100% !important;
+        aspect-ratio: 16 / 11 !important;
+        scroll-snap-align: none !important;
+      }
     }
 
     /* Clients section */
