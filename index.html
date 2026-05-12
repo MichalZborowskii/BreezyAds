@@ -600,25 +600,44 @@
       track.addEventListener('scroll', updateUI, { passive: true });
       window.addEventListener('resize', updateUI);
 
-      // Drag-to-scroll (desktop)
-      let isDown = false, startX = 0, startLeft = 0;
+      // Drag-to-scroll with threshold so clicks on cards still work.
+      // Only activates after the pointer moves ≥6px horizontally.
+      let pointerStart = null;
+      let dragging = false;
+      const DRAG_THRESHOLD = 6;
+
       track.addEventListener('pointerdown', e => {
-        isDown = true; startX = e.clientX; startLeft = track.scrollLeft;
-        track.classList.add('dragging');
-        track.setPointerCapture(e.pointerId);
+        // Only left button / primary touch
+        if (e.button !== 0 && e.pointerType === 'mouse') return;
+        pointerStart = { x: e.clientX, y: e.clientY, scrollLeft: track.scrollLeft, id: e.pointerId };
+        dragging = false;
       });
       track.addEventListener('pointermove', e => {
-        if (!isDown) return;
-        track.scrollLeft = startLeft - (e.clientX - startX);
+        if (!pointerStart) return;
+        const dx = e.clientX - pointerStart.x;
+        if (!dragging) {
+          if (Math.abs(dx) < DRAG_THRESHOLD) return;
+          dragging = true;
+          track.classList.add('dragging');
+          try { track.setPointerCapture(pointerStart.id); } catch (_) {}
+        }
+        track.scrollLeft = pointerStart.scrollLeft - dx;
       });
       function endDrag(e) {
-        if (!isDown) return;
-        isDown = false;
+        if (!pointerStart) return;
+        if (dragging) {
+          // Suppress the upcoming click on the card we dragged from.
+          const blockClick = ev => { ev.preventDefault(); ev.stopPropagation(); };
+          track.addEventListener('click', blockClick, { capture: true, once: true });
+        }
+        try { track.releasePointerCapture(pointerStart.id); } catch (_) {}
         track.classList.remove('dragging');
-        try { track.releasePointerCapture(e.pointerId); } catch (_) {}
+        pointerStart = null;
+        dragging = false;
       }
       track.addEventListener('pointerup', endDrag);
       track.addEventListener('pointercancel', endDrag);
+      track.addEventListener('lostpointercapture', endDrag);
 
       prevBtn.addEventListener('mouseenter', () => cursor.classList.add('big'));
       prevBtn.addEventListener('mouseleave', () => cursor.classList.remove('big'));
