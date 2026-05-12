@@ -280,11 +280,14 @@
       text-transform: uppercase;
       letter-spacing: -0.01em;
       font-size: clamp(22px, 2vw, 34px);
-      line-height: 1;
+      line-height: 1.05;
       margin: 0;
-      white-space: nowrap;
+      white-space: normal;
       overflow: hidden;
-      text-overflow: ellipsis;
+      word-break: break-word;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
     .client-card .card-arrow {
       width: clamp(36px, 2.6vw, 44px);
@@ -653,7 +656,7 @@
 
       const CLIENTS = [
         { title: 'BAZZO',            href: 'https://bazzo.pl/',                     bg: '#a29d9c', fg: '#fff' },
-        { title: 'AUTOODOLANY',      href: 'https://autoodolany.pl/',               bg: '#c69c52', fg: '#fff' },
+        { title: 'AUTO ODOLANY',     href: 'https://autoodolany.pl/',               bg: '#c69c52', fg: '#fff' },
         { title: 'BAZZO INTERIORS',  href: 'https://bazzo-interiors.pl/',           bg: '#f59903', fg: '#fff' },
         { title: 'BAZZO',            href: 'https://www.instagram.com/bazzo.home/', bg: '#2f2a20', fg: '#fff' },
         { title: 'GABINETY MAJOCHA', href: 'https://gabinetymajocha.pl/',           bg: '#001f3f', fg: '#fff' },
