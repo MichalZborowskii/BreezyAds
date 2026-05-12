@@ -90,6 +90,58 @@
       opacity: 0;
     }
 
+    /* Hide custom cursor on touch devices; restore native cursor */
+    @media (hover: none), (pointer: coarse) {
+      html, body, a, button, .pill { cursor: auto; }
+      .cursor { display: none !important; }
+    }
+
+    /* Mobile layout tweaks */
+    @media (max-width: 768px) {
+      .top-bar { font-size: 12px !important; }
+      .top-bar .brand-text { font-size: 12px; }
+
+      .pill {
+        height: 28vw !important;
+        min-height: 110px;
+        max-height: 180px;
+        aspect-ratio: auto !important;
+        font-size: clamp(26px, 7.5vw, 48px);
+        padding: 0 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+      }
+      .pill img {
+        position: static;
+        transform: none;
+        top: auto;
+        left: auto;
+        height: 60%;
+        max-width: 28%;
+        max-height: 70%;
+      }
+      .pill .label-text {
+        position: static;
+        transform: none;
+        top: auto;
+        left: auto;
+        flex-shrink: 1;
+        min-width: 0;
+      }
+
+      .clients-section {
+        margin-top: clamp(64px, 14vh, 140px);
+        border-top: 1px solid currentColor;
+        padding-top: clamp(40px, 8vh, 80px);
+      }
+      .clients-title { font-size: clamp(36px, 11vw, 56px); }
+      .clients-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .clients-controls { align-self: flex-end; }
+      .client-card { width: clamp(240px, 78vw, 320px); }
+    }
+
     /* Clients section */
     .clients-section {
       margin-top: clamp(80px, 12vh, 200px);
