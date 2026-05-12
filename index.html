@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Breezy Ads</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,7 +38,7 @@
       right: 0;
       z-index: 100;
       background: #fff;
-      padding: 1.25rem 1rem;
+      padding: calc(env(safe-area-inset-top, 0px) + 1.25rem) 1rem 1.25rem;
       margin-bottom: 0 !important;
       transition: background 0.3s ease, color 0.3s ease;
     }
@@ -61,7 +61,7 @@
     .top-bar.scrolled::after { opacity: 1; }
     .page-content { padding-top: 100px !important; }
     @media (max-width: 768px) {
-      .page-content { padding-top: 56px !important; }
+      .page-content { padding-top: calc(env(safe-area-inset-top, 0px) + 110px) !important; }
     }
 
     /* Theme toggle button */
@@ -150,20 +150,17 @@
         aspect-ratio: auto !important;
         font-size: clamp(22px, 6.5vw, 36px) !important;
         padding: 0 1.25rem !important;
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        gap: 0.6rem;
+        display: block !important;
       }
       .pill img {
-        position: static !important;
-        transform: none !important;
-        top: auto !important;
-        left: auto !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 18% !important;
+        transform: translate(-50%, -50%) !important;
         height: auto !important;
-        width: 13% !important;
-        max-width: 13% !important;
-        max-height: 38% !important;
+        width: 18% !important;
+        max-width: 18% !important;
+        max-height: 45% !important;
         background: #fff;
         border-radius: 18%;
         padding: 3px;
@@ -174,12 +171,11 @@
         padding: 0;
       }
       .pill .label-text {
-        position: static !important;
-        transform: none !important;
-        top: auto !important;
-        left: auto !important;
-        flex-shrink: 1;
-        min-width: 0;
+        position: absolute !important;
+        top: 50% !important;
+        left: 60% !important;
+        transform: translate(-50%, -50%) !important;
+        white-space: nowrap;
       }
 
       .clients-section {
@@ -562,7 +558,7 @@
     .row-line { border-top: 1px solid #000; }
   </style>
 </head>
-<body class="min-h-screen dark">
+<body class="min-h-screen">
 
   <div class="cursor" id="cursor"><div class="inner"></div></div>
 
@@ -668,7 +664,7 @@
         maskCircle.setAttribute('cx', dark ? 17 : 33);
         maskCircle.setAttribute('cy', dark ? 8 : 0);
       }
-      applyTheme(true);
+      applyTheme(false);
 
       // Click sound (short tick)
       let _ctx = null, _buf = null, lastSnd = 0;
