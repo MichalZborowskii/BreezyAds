@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Breezy Ads</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+      background: #ffffff;
+      color: #000;
+      cursor: none;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+    body.dark { background: #3f4040; color: #fff; }
+    a, button, .pill { cursor: none; }
+
+    .brand-text {
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      font-weight: 700;
+    }
+    .top-bar { font-size: 26px !important; }
+    .top-bar .brand-text { font-size: 26px; line-height: 1; }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      background: none;
+      border: none;
+      padding: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(0,0,0,0.82);
+      border-radius: 8px;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.18s cubic-bezier(.2,.7,.2,1), color 0.3s ease;
+    }
+    body.dark .theme-toggle { color: rgba(255,255,255,0.82); }
+    .theme-toggle:hover { transform: scale(1.1); }
+    .theme-toggle:active { transform: scale(0.86); }
+    .theme-toggle svg { overflow: visible; transition: transform 0.5s cubic-bezier(.2,.7,.2,1); }
+    body.dark .theme-toggle svg { transform: rotate(270deg); }
+    .theme-toggle .sun-rays { transition: opacity 0.4s ease, transform 0.5s cubic-bezier(.2,.7,.2,1); transform-origin: 12px 12px; }
+    body.dark .theme-toggle .sun-rays { opacity: 0; transform: scale(0) rotate(-30deg); }
+    .theme-toggle .body-circle { transition: r 0.5s cubic-bezier(.2,.7,.2,1); }
+    .theme-toggle .mask-circle { transition: cx 0.5s cubic-bezier(.2,.7,.2,1), cy 0.5s cubic-bezier(.2,.7,.2,1); }
+
+    /* Custom cursor — Símon.com style: white dot with mix-blend-mode: difference */
+    .cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: clamp(1.2rem, 3vw, 3rem);
+      height: clamp(1.2rem, 3vw, 3rem);
+      pointer-events: none;
+      z-index: 9999;
+      will-change: transform;
+      mix-blend-mode: difference;
+      transition: width 0.15s, height 0.15s, opacity 0.15s;
+    }
+    .cursor .inner {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .cursor.big {
+      width: calc(3rem + clamp(1.2rem, 3vw, 3rem));
+      height: calc(3rem + clamp(1.2rem, 3vw, 3rem));
+    }
+    .cursor.active {
+      width: calc(0.75 * clamp(1.2rem, 3vw, 3rem));
+      height: calc(0.75 * clamp(1.2rem, 3vw, 3rem));
+    }
+    .cursor.active.big {
+      width: calc(2.25rem + clamp(1.2rem, 3vw, 3rem));
+      height: calc(2.25rem + clamp(1.2rem, 3vw, 3rem));
+    }
+    .cursor.hidden {
+      width: 0;
+      height: 0;
+      opacity: 0;
+    }
+
+    /* Clients section */
+    .clients-section {
+      margin-top: clamp(80px, 12vh, 200px);
+      margin-bottom: clamp(40px, 6vh, 100px);
+    }
+    .clients-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-bottom: clamp(32px, 5vh, 64px);
+    }
+    .clients-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      font-size: clamp(40px, 6vw, 88px);
+      line-height: 0.95;
+      margin: 0;
+    }
+    .clients-desc {
+      max-width: 28rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(13px, 1vw, 16px);
+      line-height: 1.5;
+      color: currentColor;
+      opacity: 0.7;
+      margin: 1rem 0 0;
+    }
+    .clients-controls {
+      display: flex;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .clients-controls button {
+      width: 56px;
+      height: 56px;
+      border-radius: 9999px;
+      border: 2px solid currentColor;
+      background: transparent;
+      color: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease;
+    }
+    .clients-controls button:hover:not(:disabled) {
+      background: currentColor;
+    }
+    .clients-controls button:hover:not(:disabled) svg { color: var(--invert, #fff); }
+    body.dark .clients-controls button:hover:not(:disabled) svg { color: #000; }
+    .clients-controls button:active:not(:disabled) { transform: scale(0.94); }
+    .clients-controls button:disabled { opacity: 0.25; cursor: default; }
+    .clients-controls svg { width: 22px; height: 22px; }
+
+    .carousel {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+    .carousel-track {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+      cursor: grab;
+    }
+    .carousel-track::-webkit-scrollbar { display: none; }
+    .carousel-track.dragging { cursor: grabbing; scroll-behavior: auto; }
+
+    .client-card {
+      flex: 0 0 auto;
+      width: clamp(280px, 30vw, 420px);
+      aspect-ratio: 4 / 5;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      scroll-snap-align: start;
+      background: #111;
+      isolation: isolate;
+      transition: transform 0.4s cubic-bezier(.2,.7,.2,1);
+    }
+    .client-card:hover {
+      transform: translateY(-4px);
+    }
+    .client-card .card-body {
+      position: absolute;
+      inset: auto 0 0 0;
+      padding: clamp(18px, 2vw, 28px) clamp(20px, 2.5vw, 32px);
+      color: #fff;
+      z-index: 1;
+      font-family: 'Montserrat', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .client-card .card-title {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      font-size: clamp(22px, 2vw, 34px);
+      line-height: 1;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .client-card .card-arrow {
+      width: clamp(36px, 2.6vw, 44px);
+      height: clamp(36px, 2.6vw, 44px);
+      flex-shrink: 0;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s cubic-bezier(.2,.7,.2,1), background 0.25s ease, color 0.25s ease;
+    }
+    .client-card .card-arrow svg {
+      width: 55%;
+      height: 55%;
+    }
+    .client-card:hover .card-arrow {
+      transform: rotate(-12deg) scale(1.08);
+      background: #fff;
+      color: #000;
+    }
+
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .carousel-dots button {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      border: none;
+      padding: 0;
+      background: currentColor;
+      opacity: 0.2;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .carousel-dots button.active { opacity: 1; transform: scale(1.15); }
+    /* Símon-style pill: 3D tilt on mouse-move, scale on active */
+    .pill-wrap {
+      width: 100%;
+      perspective: 30vh;
+      perspective-origin: 50% 50%;
+      transition: transform 1.2s cubic-bezier(.2,.7,.2,1);
+      --rotX: 0deg;
+      --rotY: 0deg;
+    }
+    .pill-wrap:active { transform: scale(0.97); transition-duration: 0.1s; }
+
+    .pill {
+      display: block;
+      width: 100%;
+      height: clamp(12rem, 42vh, 28rem);
+      border: none;
+      border-radius: 50vmax;
+      background: var(--cbg, #BAF67D);
+      color: var(--cfg, #000);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: clamp(36px, 7vw, 100px);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      position: relative;
+      transform: rotateY(var(--rotY, 0deg)) rotateX(var(--rotX, 0deg));
+      transition: box-shadow 1.4s ease-out,
+                  background 0.6s ease,
+                  color 0.6s ease,
+                  transform 1.2s cubic-bezier(.2,.7,.2,1),
+                  transform-origin 0.3s;
+      transform-origin: 50% 50%;
+    }
+    .pill-wrap:active .pill {
+      box-shadow: rgba(0,0,0,0.1) 0 0.25rem 1rem -0.2rem;
+    }
+    .pill.active {
+      box-shadow: rgba(0,0,0,0.2) 0 0.5rem 2rem -0.15rem;
+      transition: box-shadow 0.5s ease-out,
+                  background 0.6s ease,
+                  color 0.6s ease,
+                  transform 0.2s ease-out,
+                  transform-origin 0.3s;
+    }
+    .pill:focus-visible { outline: 3px solid #000; outline-offset: 4px; }
+
+    .pill img {
+      position: absolute;
+      top: 50%;
+      left: 18%;
+      transform: translate(-50%, -50%);
+      height: 65%;
+      max-width: 30%;
+      width: auto;
+      object-fit: contain;
+      z-index: 1;
+      background: #fff;
+      border-radius: 22%;
+      padding: 6px;
+    }
+    .pill img.transparent {
+      background: none;
+      border-radius: 0;
+      padding: 0;
+    }
+    .pill .label-text {
+      position: absolute;
+      top: 50%;
+      left: 60%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .top-bar, .bottom-bar {
+      font-size: 13px;
+      letter-spacing: 0.01em;
+    }
+    .row-line { border-top: 1px solid #000; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <div class="cursor" id="cursor"><div class="inner"></div></div>
+
+
+  <div class="w-full mx-auto px-4 sm:px-6 py-5">
+
+    <!-- Top bar -->
+    <div class="top-bar grid grid-cols-3 items-center mb-6">
+      <div class="text-left brand-text">Breezy Ads</div>
+      <div class="text-center brand-text">Performance marketing studio</div>
+      <div class="text-right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <mask id="moonMask">
+              <rect x="0" y="0" width="100%" height="100%" fill="white" />
+              <circle class="mask-circle" id="maskCircle" cx="33" cy="0" r="9" fill="black" />
+            </mask>
+            <circle class="body-circle" id="bodyCircle" cx="12" cy="12" r="5" fill="currentColor" stroke="none" mask="url(#moonMask)" />
+            <g class="sun-rays">
+              <line x1="12" y1="1"     x2="12"    y2="3" />
+              <line x1="12" y1="21"    x2="12"    y2="23" />
+              <line x1="1"  y1="12"    x2="3"     y2="12" />
+              <line x1="21" y1="12"    x2="23"    y2="12" />
+              <line x1="5.64"  y1="5.64"  x2="4.22"  y2="4.22" />
+              <line x1="18.36" y1="5.64"  x2="19.78" y2="4.22" />
+              <line x1="5.64"  y1="18.36" x2="4.22"  y2="19.78" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            </g>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Pill buttons (one per tool, logos go inside via assets/ later) -->
+    <div class="flex flex-col gap-6 sm:gap-8">
+      <div class="pill-wrap" style="--cbg:#23a84a; --cfg:#fff;"><button class="pill" data-name="Google Ads"></button></div>
+      <div class="pill-wrap" style="--cbg:#ff6b35; --cfg:#fff;"><button class="pill" data-name="Websites"></button></div>
+    </div>
+
+    <!-- Clients carousel -->
+    <section class="clients-section">
+      <div class="clients-header">
+        <div>
+          <h2 class="clients-title brand-text">Our Projects</h2>
+          <p class="clients-desc">A selection of brands and projects we've helped grow with performance marketing, creative production and analytics.</p>
+        </div>
+        <div class="clients-controls">
+          <button id="clientsPrev" aria-label="Previous">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          </button>
+          <button id="clientsNext" aria-label="Next">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="carousel">
+        <div class="carousel-track" id="clientsTrack">
+          <!-- Cards injected by JS -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Bottom bar -->
+    <div class="bottom-bar grid grid-cols-3 items-center mt-8">
+      <div class="text-left">Code, visuals</div>
+      <div class="text-center">©2026</div>
+      <div class="text-right">Warsaw</div>
+    </div>
+
+  </div>
+
+  <script>
+    // Shared references
+    const cursor = document.getElementById('cursor');
+
+    // Theme toggle (sun ↔ moon morph + click sound)
+    (function() {
+      const btn = document.getElementById('themeToggle');
+      const body = document.body;
+      const bodyCircle = document.getElementById('bodyCircle');
+      const maskCircle = document.getElementById('maskCircle');
+
+      function applyTheme(dark) {
+        body.classList.toggle('dark', dark);
+        bodyCircle.setAttribute('r', dark ? 9 : 5);
+        maskCircle.setAttribute('cx', dark ? 17 : 33);
+        maskCircle.setAttribute('cy', dark ? 8 : 0);
+      }
+      applyTheme(false);
+
+      // Click sound (short tick)
+      let _ctx = null, _buf = null, lastSnd = 0;
+      function tick() {
+        const now = performance.now();
+        if (now - lastSnd < 80) return;
+        lastSnd = now;
+        try {
+          if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
+          if (_ctx.state === 'suspended') _ctx.resume();
+          if (!_buf) {
+            const rate = _ctx.sampleRate;
+            const len = Math.floor(rate * 0.006);
+            _buf = _ctx.createBuffer(1, len, rate);
+            const ch = _buf.getChannelData(0);
+            for (let i = 0; i < len; i++) {
+              const t = i / len;
+              const sine = Math.sin(2 * Math.PI * 3400 * t);
+              const noise = Math.random() * 2 - 1;
+              ch[i] = (sine * 0.6 + noise * 0.4) * Math.pow(1 - t, 3);
+            }
+          }
+          const src = _ctx.createBufferSource();
+          const gain = _ctx.createGain();
+          src.buffer = _buf;
+          gain.gain.value = 0.08;
+          src.connect(gain); gain.connect(_ctx.destination);
+          src.start();
+        } catch (e) { /* silent */ }
+      }
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        applyTheme(!body.classList.contains('dark'));
+        tick();
+      });
+      btn.addEventListener('mouseenter', () => cursor.classList.add('big'));
+      btn.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+    })();
+
+    // Clients carousel
+    (function() {
+      const track = document.getElementById('clientsTrack');
+      const prevBtn = document.getElementById('clientsPrev');
+      const nextBtn = document.getElementById('clientsNext');
+
+      const CLIENTS = [
+        { title: 'BAZZO',            href: 'https://bazzo.pl/',                     bg: '#3f4040', fg: '#fff' },
+        { title: 'AUTOODOLANY',      href: 'https://autoodolany.pl/',               bg: '#c69c52', fg: '#fff' },
+        { title: 'BAZZO INTERIORS',  href: 'https://bazzo-interiors.pl/',           bg: '#f59903', fg: '#fff' },
+        { title: 'BAZZO',            href: 'https://www.instagram.com/bazzo.home/', bg: '#2f2a20', fg: '#fff' },
+        { title: 'GABINETY MAJOCHA', href: 'https://gabinetymajocha.pl/',           bg: '#001f3f', fg: '#fff' },
+        { title: 'KAMPERY PLENER',   href: 'https://kamperyplener.pl/',             bg: '#ff6b00', fg: '#fff' },
+      ];
+
+      CLIENTS.forEach((c, i) => {
+        const card = document.createElement('a');
+        card.href = c.href;
+        card.target = '_blank';
+        card.rel = 'noopener noreferrer';
+        card.className = 'client-card';
+        card.style.background = c.bg;
+        card.style.color = c.fg;
+        card.innerHTML = `
+          <div class="card-body">
+            <h3 class="card-title">${c.title}</h3>
+            <span class="card-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </span>
+          </div>`;
+        track.appendChild(card);
+
+        card.addEventListener('mouseenter', () => cursor.classList.add('big'));
+        card.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+      });
+
+      const cards = [...track.children];
+
+      function cardStep() {
+        if (cards.length < 2) return cards[0]?.offsetWidth || 0;
+        return cards[1].offsetLeft - cards[0].offsetLeft;
+      }
+      function currentIndex() {
+        return Math.round(track.scrollLeft / cardStep());
+      }
+      function scrollToIndex(i) {
+        const max = cards.length - 1;
+        const clamped = Math.max(0, Math.min(max, i));
+        track.scrollTo({ left: cards[clamped].offsetLeft, behavior: 'smooth' });
+      }
+      function updateUI() {
+        prevBtn.disabled = track.scrollLeft <= 2;
+        nextBtn.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+      }
+      prevBtn.addEventListener('click', () => scrollToIndex(currentIndex() - 1));
+      nextBtn.addEventListener('click', () => scrollToIndex(currentIndex() + 1));
+      track.addEventListener('scroll', updateUI, { passive: true });
+      window.addEventListener('resize', updateUI);
+
+      // Drag-to-scroll (desktop)
+      let isDown = false, startX = 0, startLeft = 0;
+      track.addEventListener('pointerdown', e => {
+        isDown = true; startX = e.clientX; startLeft = track.scrollLeft;
+        track.classList.add('dragging');
+        track.setPointerCapture(e.pointerId);
+      });
+      track.addEventListener('pointermove', e => {
+        if (!isDown) return;
+        track.scrollLeft = startLeft - (e.clientX - startX);
+      });
+      function endDrag(e) {
+        if (!isDown) return;
+        isDown = false;
+        track.classList.remove('dragging');
+        try { track.releasePointerCapture(e.pointerId); } catch (_) {}
+      }
+      track.addEventListener('pointerup', endDrag);
+      track.addEventListener('pointercancel', endDrag);
+
+      prevBtn.addEventListener('mouseenter', () => cursor.classList.add('big'));
+      prevBtn.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+      nextBtn.addEventListener('mouseenter', () => cursor.classList.add('big'));
+      nextBtn.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+
+      updateUI();
+    })();
+
+    // Custom cursor — Símon.com style
+    let cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+    let tx = cx, ty = cy;
+    window.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+    window.addEventListener('mousedown', () => cursor.classList.add('active'));
+    window.addEventListener('mouseup',   () => cursor.classList.remove('active'));
+    function tick() {
+      cx += (tx - cx) * 0.25;
+      cy += (ty - cy) * 0.25;
+      cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+      requestAnimationFrame(tick);
+    }
+    tick();
+
+    // Tool catalog: logo + colors. Pills cycle through their state lists on click.
+    // transparent: true → logo PNG already has alpha, don't add white backdrop.
+    // displayName overrides the uppercase rendering of the key (e.g. "Tik Tok Ads").
+    const TOOLS = {
+      'Google Ads':   { logo: 'assets/google ads.png',                       bg: '#23a84a', fg: '#fff', transparent: true },
+      'Facebook Ads': { logo: 'assets/Facebook_Logo_Primary.png',            bg: '#0966ff', fg: '#fff', transparent: true },
+      'TikTok Ads':   { logo: 'assets/vecteezy_tiktok-png-icon_16716450.png', bg: '#000000', fg: '#fff', transparent: true, displayName: 'Tik Tok Ads' },
+      'LinkedIn Ads': { logo: 'assets/linkedin_logo_icon_147268.webp',       bg: '#0966c2', fg: '#fff', transparent: true },
+
+      'Websites':     { logo: 'assets/webistes.png',                         bg: '#ff6b35', fg: '#fff', transparent: true },
+      'Social Media': { logo: 'assets/social-media_7261318.png',             bg: '#7c3aed', fg: '#fff', transparent: true },
+      'Videos':       { logo: 'assets/video.png',                            bg: '#ef4444', fg: '#fff', transparent: true },
+      'Banners':      { logo: 'assets/banners.png',                          bg: '#facc15', fg: '#000', transparent: true },
+    };
+
+    // Per-pill cycle lists (by pill index).
+    const PILL_CYCLES = [
+      ['Google Ads', 'Facebook Ads', 'TikTok Ads', 'LinkedIn Ads'],
+      ['Websites',  'Social Media', 'Videos',     'Banners'],
+    ];
+
+    function renderPill(pill, name) {
+      const t = TOOLS[name];
+      if (!t) return;
+      const wrap = pill.parentElement;
+      wrap.style.setProperty('--cbg', t.bg);
+      wrap.style.setProperty('--cfg', t.fg);
+      pill.dataset.name = name;
+      pill.setAttribute('aria-label', name);
+      pill.setAttribute('title', name);
+
+      const label = document.createElement('span');
+      label.className = 'label-text';
+      label.textContent = (t.displayName || name).toUpperCase();
+
+      pill.innerHTML = '';
+      const img = new Image();
+      img.alt = name;
+      if (t.transparent) img.className = 'transparent';
+      img.onload  = () => { pill.innerHTML = ''; pill.appendChild(img); pill.appendChild(label); };
+      img.onerror = () => {
+        pill.innerHTML = '';
+        const ph = document.createElement('span');
+        pill.appendChild(ph);
+        pill.appendChild(label);
+      };
+      img.src = t.logo;
+    }
+
+    document.querySelectorAll('.pill').forEach(pill => {
+      const name = pill.dataset.name;
+      renderPill(pill, name);
+
+      const wrap = pill.parentElement;
+
+      // 3D tilt on mouse move (Símon-style)
+      const MAX = 8; // max rotation degrees
+      function onMove(e) {
+        const r = wrap.getBoundingClientRect();
+        const dx = (e.clientX - r.left) / r.width - 0.5;   // -0.5 .. 0.5
+        const dy = (e.clientY - r.top)  / r.height - 0.5;
+        wrap.style.setProperty('--rotY', (dx *  MAX) + 'deg');
+        wrap.style.setProperty('--rotX', (-dy * MAX) + 'deg');
+      }
+      function reset() {
+        wrap.style.setProperty('--rotY', '0deg');
+        wrap.style.setProperty('--rotX', '0deg');
+        pill.classList.remove('active');
+        cursor.classList.remove('big');
+      }
+      wrap.addEventListener('mouseenter', () => {
+        pill.classList.add('active');
+        cursor.classList.add('big');
+      });
+      wrap.addEventListener('mousemove', onMove);
+      wrap.addEventListener('mouseleave', reset);
+
+      pill.addEventListener('click', () => {
+        wrap.animate(
+          [
+            { transform: 'scale(0.97)' },
+            { transform: 'scale(1.01)' },
+            { transform: 'scale(1)' },
+          ],
+          { duration: 320, easing: 'cubic-bezier(.2,.7,.2,1)' }
+        );
+        // Each pill cycles through its own state list.
+        const wraps = [...document.querySelectorAll('.pill-wrap')];
+        const pillIdx = wraps.indexOf(wrap);
+        const cycle = PILL_CYCLES[pillIdx];
+        if (cycle) {
+          const cur = pill.dataset.name;
+          const idx = cycle.indexOf(cur);
+          const next = cycle[(idx + 1) % cycle.length];
+          renderPill(pill, next);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

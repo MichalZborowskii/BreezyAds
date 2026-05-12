@@ -1,0 +1,18 @@
+node_modules/
+.DS_Store
+.DS_Store?
+._*
+
+# Local Claude config (keep CLAUDE.md, ignore personal settings)
+.claude/settings.local.json
+
+# Dev artifacts / screenshots
+render*.png
+reference.png
+screenshot-*.png
+.screenshot.js
+
+# Editor / OS
+.vscode/
+.idea/
+Thumbs.db
