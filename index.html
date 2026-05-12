@@ -18,6 +18,8 @@
     }
     body.dark { background: #3f4040; color: #fff; }
     a, button, .pill { cursor: none; }
+    /* Make sure nothing in the cursor element ever blocks pointer events */
+    .cursor, .cursor * { pointer-events: none !important; }
 
     .brand-text {
       font-family: 'Montserrat', sans-serif;
@@ -611,8 +613,8 @@
     window.addEventListener('mousedown', () => cursor.classList.add('active'));
     window.addEventListener('mouseup',   () => cursor.classList.remove('active'));
     function tick() {
-      cx += (tx - cx) * 0.25;
-      cy += (ty - cy) * 0.25;
+      cx += (tx - cx) * 0.55;
+      cy += (ty - cy) * 0.55;
       cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
       requestAnimationFrame(tick);
     }
