@@ -335,6 +335,14 @@
       display: flex;
       justify-content: center;
     }
+    .contact-wrap {
+      perspective: 30vh;
+      perspective-origin: 50% 50%;
+      transition: transform 1.2s cubic-bezier(.2,.7,.2,1);
+      --rotX: 0deg;
+      --rotY: 0deg;
+    }
+    .contact-wrap:active { transform: scale(0.97); transition-duration: 0.1s; }
     .contact-cta {
       display: inline-flex;
       align-items: center;
@@ -353,10 +361,23 @@
       position: relative;
       overflow: hidden;
       isolation: isolate;
-      transition: transform 0.4s cubic-bezier(.2,.7,.2,1),
-                  box-shadow 0.5s ease,
-                  letter-spacing 0.4s ease;
+      transform: rotateY(var(--rotY, 0deg)) rotateX(var(--rotX, 0deg)) translateZ(0);
+      transform-origin: 50% 50%;
+      will-change: transform;
+      backface-visibility: hidden;
+      transition: box-shadow 1.4s ease-out,
+                  transform 1.2s cubic-bezier(.2,.7,.2,1),
+                  letter-spacing 0.4s ease,
+                  background 0.4s ease,
+                  color 0.4s ease;
       box-shadow: 0 2px 0 rgba(0,0,0,0.04);
+    }
+    .contact-cta.active {
+      transition: box-shadow 0.5s ease-out,
+                  transform 0.2s ease-out,
+                  letter-spacing 0.4s ease,
+                  background 0.4s ease,
+                  color 0.4s ease;
     }
     body.dark .contact-cta { background: #fff; color: #000; }
     .contact-cta::before {
@@ -378,12 +399,10 @@
                                    rgba(0,0,0,0) 60%);
     }
     .contact-cta:hover {
-      transform: translateY(-4px);
       box-shadow: 0 24px 48px rgba(0,0,0,0.22), 0 8px 16px rgba(0,0,0,0.1);
       letter-spacing: 0.01em;
     }
     .contact-cta:hover::before { opacity: 1; }
-    .contact-cta:active { transform: translateY(-1px) scale(0.99); transition-duration: 0.1s; }
     .contact-cta > * { position: relative; z-index: 1; }
     .contact-cta .mail-icon {
       width: clamp(36px, 5vw, 72px);
@@ -410,12 +429,18 @@
     @media (max-width: 768px) {
       .contact-section { margin-top: clamp(48px, 8vh, 100px); }
       .contact-cta {
-        flex-direction: column;
-        gap: 1.25rem;
-        text-align: center;
-        padding: 2rem 1.5rem;
-        font-size: clamp(22px, 7vw, 36px);
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        text-align: left;
+        padding: 1.25rem 1.5rem;
+        font-size: clamp(20px, 6vw, 32px);
         width: 100%;
+      }
+      .contact-cta .mail-icon {
+        width: clamp(32px, 8vw, 44px);
+        height: clamp(32px, 8vw, 44px);
       }
     }
     /* Símon-style pill: 3D tilt on mouse-move, scale on active */
@@ -570,15 +595,17 @@
 
     <!-- Contact CTA -->
     <section class="contact-section">
-      <a class="contact-cta" id="contactCta" href="mailto:michalzborowski97@gmail.com?subject=Hello%20Breezy%20Ads">
-        <span class="mail-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="5" width="18" height="14" rx="2"/>
-            <path d="M3 7l9 6 9-6"/>
-          </svg>
-        </span>
-        <span>Let's talk</span>
-      </a>
+      <div class="contact-wrap">
+        <a class="contact-cta" id="contactCta" href="mailto:michalzborowski97@gmail.com?subject=Hello%20Breezy%20Ads">
+          <span class="mail-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2"/>
+              <path d="M3 7l9 6 9-6"/>
+            </svg>
+          </span>
+          <span>Let's talk</span>
+        </a>
+      </div>
     </section>
 
     <!-- Bottom bar -->
@@ -658,7 +685,7 @@
         { title: 'BAZZO',            href: 'https://bazzo.pl/',                     bg: '#a29d9c', fg: '#fff' },
         { title: 'AUTO ODOLANY',     href: 'https://autoodolany.pl/',               bg: '#c69c52', fg: '#fff' },
         { title: 'BAZZO INTERIORS',  href: 'https://bazzo-interiors.pl/',           bg: '#f59903', fg: '#fff' },
-        { title: 'BAZZO',            href: 'https://www.instagram.com/bazzo.home/', bg: '#2f2a20', fg: '#fff' },
+        { title: 'BAZZO SM',         href: 'https://www.instagram.com/bazzo.home/', bg: '#2f2a20', fg: '#fff' },
         { title: 'GABINETY MAJOCHA', href: 'https://gabinetymajocha.pl/',           bg: '#001f3f', fg: '#fff' },
         { title: 'KAMPERY PLENER',   href: 'https://kamperyplener.pl/',             bg: '#ff6b00', fg: '#fff' },
       ];
@@ -754,17 +781,36 @@
       updateUI();
     })();
 
-    // Contact CTA — radial light follows mouse + custom cursor "big" on hover
+    // Contact CTA — 3D tilt on mouse-move (Símon-style) + radial light + cursor big
     (function() {
       const cta = document.getElementById('contactCta');
       if (!cta) return;
-      cta.addEventListener('mousemove', e => {
-        const r = cta.getBoundingClientRect();
-        cta.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
-        cta.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100) + '%');
+      const wrap = cta.parentElement;
+      const MAX = 8;
+
+      function onMove(e) {
+        const r = wrap.getBoundingClientRect();
+        const dx = (e.clientX - r.left) / r.width  - 0.5;
+        const dy = (e.clientY - r.top)  / r.height - 0.5;
+        wrap.style.setProperty('--rotY', ( dx * MAX) + 'deg');
+        wrap.style.setProperty('--rotX', (-dy * MAX) + 'deg');
+        // Radial light follows cursor inside the CTA itself
+        const ir = cta.getBoundingClientRect();
+        cta.style.setProperty('--mx', ((e.clientX - ir.left) / ir.width  * 100) + '%');
+        cta.style.setProperty('--my', ((e.clientY - ir.top)  / ir.height * 100) + '%');
+      }
+      function reset() {
+        wrap.style.setProperty('--rotY', '0deg');
+        wrap.style.setProperty('--rotX', '0deg');
+        cta.classList.remove('active');
+        cursor.classList.remove('big');
+      }
+      wrap.addEventListener('mouseenter', () => {
+        cta.classList.add('active');
+        cursor.classList.add('big');
       });
-      cta.addEventListener('mouseenter', () => cursor.classList.add('big'));
-      cta.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+      wrap.addEventListener('mousemove', onMove);
+      wrap.addEventListener('mouseleave', reset);
     })();
 
     // Custom cursor — Símon.com style
@@ -790,9 +836,9 @@
       'TikTok Ads':   { logo: 'assets/vecteezy_tiktok-png-icon_16716450.png', bg: '#000000', fg: '#fff', transparent: true, displayName: 'Tik Tok Ads' },
       'LinkedIn Ads': { logo: 'assets/linkedin_logo_icon_147268.webp',       bg: '#0966c2', fg: '#fff', transparent: true },
 
-      'Websites':     { logo: 'assets/webistes.png',                         bg: '#ff6b35', fg: '#fff', transparent: true },
-      'Social Media': { logo: 'assets/social-media_7261318.png',             bg: '#7c3aed', fg: '#fff', transparent: true },
-      'Videos':       { logo: 'assets/video.png',                            bg: '#ef4444', fg: '#fff', transparent: true },
+      'Websites':     { logo: 'assets/website.png',                          bg: '#ff6b35', fg: '#fff', transparent: true },
+      'Social Media': { logo: 'assets/social media.png',                      bg: '#7c3aed', fg: '#fff', transparent: true },
+      'Videos':       { logo: 'assets/videos.png',                            bg: '#ef4444', fg: '#fff', transparent: true },
       'Banners':      { logo: 'assets/banners.png',                          bg: '#facc15', fg: '#000', transparent: true },
     };
 
