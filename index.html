@@ -110,32 +110,40 @@
       .bottom-bar { font-size: 10px; }
 
       .pill {
-        height: 30vh !important;
-        min-height: 200px;
-        max-height: 360px;
+        height: 26vh !important;
+        min-height: 170px;
+        max-height: 280px;
         aspect-ratio: auto !important;
-        font-size: clamp(38px, 11vw, 72px);
-        padding: 0 1.25rem;
-        display: flex;
+        font-size: clamp(22px, 6.5vw, 36px) !important;
+        padding: 0 1.25rem !important;
+        display: flex !important;
         align-items: center;
         justify-content: center;
-        gap: 0.8rem;
+        gap: 0.6rem;
       }
       .pill img {
-        position: static;
-        transform: none;
-        top: auto;
-        left: auto;
-        height: auto;
-        width: 20%;
-        max-width: 20%;
-        max-height: 50%;
+        position: static !important;
+        transform: none !important;
+        top: auto !important;
+        left: auto !important;
+        height: auto !important;
+        width: 13% !important;
+        max-width: 13% !important;
+        max-height: 38% !important;
+        background: #fff;
+        border-radius: 18%;
+        padding: 3px;
+      }
+      .pill img.transparent {
+        background: none;
+        border-radius: 0;
+        padding: 0;
       }
       .pill .label-text {
-        position: static;
-        transform: none;
-        top: auto;
-        left: auto;
+        position: static !important;
+        transform: none !important;
+        top: auto !important;
+        left: auto !important;
         flex-shrink: 1;
         min-width: 0;
       }
@@ -526,7 +534,7 @@
       const nextBtn = document.getElementById('clientsNext');
 
       const CLIENTS = [
-        { title: 'BAZZO',            href: 'https://bazzo.pl/',                     bg: '#3f4040', fg: '#fff' },
+        { title: 'BAZZO',            href: 'https://bazzo.pl/',                     bg: '#a29d9c', fg: '#fff' },
         { title: 'AUTOODOLANY',      href: 'https://autoodolany.pl/',               bg: '#c69c52', fg: '#fff' },
         { title: 'BAZZO INTERIORS',  href: 'https://bazzo-interiors.pl/',           bg: '#f59903', fg: '#fff' },
         { title: 'BAZZO',            href: 'https://www.instagram.com/bazzo.home/', bg: '#2f2a20', fg: '#fff' },
