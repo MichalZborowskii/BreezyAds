@@ -30,6 +30,40 @@
     .top-bar { font-size: 26px !important; }
     .top-bar .brand-text { font-size: 26px; line-height: 1; }
 
+    /* Sticky top bar with símon-style underline */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: #fff;
+      padding: 1.25rem 1rem;
+      margin-bottom: 0 !important;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    body.dark .top-bar { background: #3f4040; }
+    @media (min-width: 640px) {
+      .top-bar { padding: 1.25rem 1.5rem; }
+    }
+    .top-bar::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -2px;
+      height: 2px;
+      background: currentColor;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .top-bar.scrolled::after { opacity: 1; }
+    .page-content { padding-top: 100px !important; }
+    @media (max-width: 768px) {
+      .page-content { padding-top: 56px !important; }
+    }
+
     /* Theme toggle button */
     .theme-toggle {
       background: none;
@@ -528,12 +562,12 @@
     .row-line { border-top: 1px solid #000; }
   </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen dark">
 
   <div class="cursor" id="cursor"><div class="inner"></div></div>
 
 
-  <div class="w-full mx-auto px-4 sm:px-6 py-5">
+  <div class="w-full mx-auto px-4 sm:px-6 py-5 page-content">
 
     <!-- Top bar -->
     <div class="top-bar grid grid-cols-3 items-center mb-6">
@@ -634,7 +668,7 @@
         maskCircle.setAttribute('cx', dark ? 17 : 33);
         maskCircle.setAttribute('cy', dark ? 8 : 0);
       }
-      applyTheme(false);
+      applyTheme(true);
 
       // Click sound (short tick)
       let _ctx = null, _buf = null, lastSnd = 0;
@@ -925,6 +959,15 @@
         }
       });
     });
+
+    // Símon-style sticky header underline: shows after scrolling past the top
+    (() => {
+      const bar = document.querySelector('.top-bar');
+      if (!bar) return;
+      const update = () => bar.classList.toggle('scrolled', window.scrollY > 4);
+      update();
+      window.addEventListener('scroll', update, { passive: true });
+    })();
   </script>
 </body>
 </html>
