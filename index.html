@@ -635,6 +635,79 @@
       .service-desc { grid-column: 2; margin-top: 8px; }
     }
 
+    /* Contact form */
+    .form-section {
+      margin-top: clamp(60px, 10vh, 140px);
+      display: flex;
+      justify-content: center;
+    }
+    .form-card { width: 100%; max-width: 42rem; }
+    .form-title {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      font-size: clamp(28px, 4vw, 56px);
+      line-height: 1;
+      margin: 0 0 0.75rem;
+      text-align: center;
+    }
+    .form-sub {
+      text-align: center;
+      font-size: clamp(13px, 1vw, 16px);
+      line-height: 1.5;
+      opacity: 0.7;
+      margin: 0 0 2.5rem;
+    }
+    .form-field { margin-bottom: 1.75rem; }
+    .form-field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.6;
+      margin-bottom: 0.4rem;
+    }
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid currentColor;
+      border-radius: 0;
+      padding: 0.6rem 0;
+      font-family: inherit;
+      font-size: 16px;
+      color: inherit;
+      outline: none;
+    }
+    .form-field input::placeholder,
+    .form-field textarea::placeholder { color: inherit; opacity: 0.35; }
+    .form-field textarea { resize: vertical; min-height: 110px; }
+    .form-submit {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 9999px;
+      font-family: inherit;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      font-size: 15px;
+      padding: 1rem 2.5rem;
+      transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.4s ease, color 0.4s ease;
+    }
+    .form-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,0,0,0.18); }
+    .form-submit:active { transform: scale(0.96); }
+    body.dark .form-submit { background: #fff; color: #000; }
+    .form-status { margin-top: 1rem; font-size: 14px; display: none; }
+    .form-status.show { display: block; }
+    .form-note { font-size: 12px; opacity: 0.55; margin-top: 1rem; line-height: 1.5; }
+    .form-note a, .contact-info a { text-decoration: underline; text-underline-offset: 3px; }
+
     /* Contact info under CTA */
     .contact-info {
       text-align: center;
@@ -788,10 +861,39 @@
       </div>
     </section>
 
+    <!-- Contact form -->
+    <section class="form-section" id="kontakt">
+      <div class="form-card">
+        <h2 class="form-title brand-text">Napisz do nas</h2>
+        <p class="form-sub">Opowiedz nam o swoim projekcie - odpowiadamy w ciągu 24 godzin w dni robocze.</p>
+        <form name="kontakt" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field" id="contactForm">
+          <input type="hidden" name="form-name" value="kontakt" />
+          <p style="display:none"><label>Nie wypełniaj tego pola: <input name="bot-field" /></label></p>
+          <div class="form-field">
+            <label for="cf-name">Imię i nazwisko</label>
+            <input id="cf-name" type="text" name="name" required placeholder="Jan Kowalski" autocomplete="name" />
+          </div>
+          <div class="form-field">
+            <label for="cf-email">Adres e-mail</label>
+            <input id="cf-email" type="email" name="email" required placeholder="jan@twojafirma.pl" autocomplete="email" />
+          </div>
+          <div class="form-field">
+            <label for="cf-message">Wiadomość</label>
+            <textarea id="cf-message" name="message" required placeholder="Opisz swój projekt lub zadaj pytanie..."></textarea>
+          </div>
+          <div style="text-align:center">
+            <button type="submit" class="form-submit">Wyślij wiadomość</button>
+            <p class="form-status" id="formStatus" role="status"></p>
+            <p class="form-note">Wysyłając formularz akceptujesz naszą <a href="/polityka-prywatnosci.html">politykę prywatności</a>.</p>
+          </div>
+        </form>
+      </div>
+    </section>
+
     <!-- Contact info -->
     <p class="contact-info">
       Breezy Ads - studio performance marketingu · Warszawa, Polska<br />
-      <a href="mailto:adwords2911@gmail.com">adwords2911@gmail.com</a>
+      <a href="mailto:adwords2911@gmail.com">adwords2911@gmail.com</a> · <a href="/polityka-prywatnosci.html">Polityka prywatności</a>
     </p>
 
     <!-- Bottom bar -->
@@ -1111,6 +1213,34 @@
         }
       });
     });
+
+    // Contact form: AJAX submit to Netlify Forms with inline status message
+    (function() {
+      const form = document.getElementById('contactForm');
+      const status = document.getElementById('formStatus');
+      if (!form || !status) return;
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        status.className = 'form-status';
+        const btn = form.querySelector('.form-submit');
+        btn.disabled = true;
+        try {
+          const data = new FormData(form);
+          const res = await fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(data).toString(),
+          });
+          if (!res.ok) throw new Error('send failed');
+          form.reset();
+          status.textContent = 'Dziękujemy! Twoja wiadomość została wysłana - odezwiemy się wkrótce.';
+        } catch (err) {
+          status.textContent = 'Nie udało się wysłać wiadomości. Napisz do nas bezpośrednio: adwords2911@gmail.com';
+        }
+        status.classList.add('show');
+        btn.disabled = false;
+      });
+    })();
 
     // Símon-style sticky header underline: shows after scrolling past the top
     (() => {
