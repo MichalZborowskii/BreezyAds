@@ -560,154 +560,6 @@
       white-space: nowrap;
     }
 
-    /* About section */
-    .about-section { margin-top: clamp(80px, 12vh, 200px); }
-    .section-head { margin-bottom: clamp(28px, 5vh, 56px); }
-    .about-lead {
-      font-weight: 600;
-      font-size: clamp(20px, 2.6vw, 44px);
-      line-height: 1.25;
-      letter-spacing: -0.01em;
-      max-width: 62rem;
-      margin: 0;
-    }
-    .about-sub {
-      margin-top: 1.5rem;
-      max-width: 46rem;
-      font-size: clamp(14px, 1.1vw, 18px);
-      line-height: 1.6;
-      opacity: 0.75;
-    }
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      margin-top: clamp(40px, 6vh, 80px);
-    }
-    .stat-num {
-      font-weight: 800;
-      font-size: clamp(36px, 4vw, 64px);
-      line-height: 1;
-      letter-spacing: -0.02em;
-    }
-    .stat-label {
-      margin-top: 0.6rem;
-      font-size: clamp(11px, 0.9vw, 14px);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      opacity: 0.6;
-    }
-
-    /* Services list */
-    .services-section { margin-top: clamp(80px, 12vh, 200px); }
-    .service-row {
-      display: grid;
-      grid-template-columns: 3rem 1fr 1.2fr;
-      gap: clamp(16px, 3vw, 48px);
-      align-items: baseline;
-      padding: clamp(20px, 3.5vh, 40px) 0;
-      border-top: 1px solid currentColor;
-    }
-    .service-row:last-child { border-bottom: 1px solid currentColor; }
-    .service-num {
-      font-weight: 700;
-      font-size: clamp(12px, 1vw, 15px);
-      opacity: 0.45;
-    }
-    .service-name {
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: -0.01em;
-      font-size: clamp(20px, 2.2vw, 36px);
-      line-height: 1.05;
-      margin: 0;
-    }
-    .service-desc {
-      font-size: clamp(13px, 1vw, 16px);
-      line-height: 1.55;
-      opacity: 0.75;
-      margin: 0;
-    }
-    @media (max-width: 768px) {
-      .about-section, .services-section { margin-top: clamp(64px, 10vh, 120px); }
-      .stats-row { grid-template-columns: 1fr; gap: 1.75rem; }
-      .service-row { grid-template-columns: 2rem 1fr; }
-      .service-desc { grid-column: 2; margin-top: 8px; }
-    }
-
-    /* Contact form */
-    .form-section {
-      margin-top: clamp(60px, 10vh, 140px);
-      display: flex;
-      justify-content: center;
-    }
-    .form-card { width: 100%; max-width: 42rem; }
-    .form-title {
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: -0.01em;
-      font-size: clamp(28px, 4vw, 56px);
-      line-height: 1;
-      margin: 0 0 0.75rem;
-      text-align: center;
-    }
-    .form-sub {
-      text-align: center;
-      font-size: clamp(13px, 1vw, 16px);
-      line-height: 1.5;
-      opacity: 0.7;
-      margin: 0 0 2.5rem;
-    }
-    .form-field { margin-bottom: 1.75rem; }
-    .form-field label {
-      display: block;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      opacity: 0.6;
-      margin-bottom: 0.4rem;
-    }
-    .form-field input,
-    .form-field textarea {
-      width: 100%;
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid currentColor;
-      border-radius: 0;
-      padding: 0.6rem 0;
-      font-family: inherit;
-      font-size: 16px;
-      color: inherit;
-      outline: none;
-    }
-    .form-field input::placeholder,
-    .form-field textarea::placeholder { color: inherit; opacity: 0.35; }
-    .form-field textarea { resize: vertical; min-height: 110px; }
-    .form-submit {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      background: #000;
-      color: #fff;
-      border: none;
-      border-radius: 9999px;
-      font-family: inherit;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-      font-size: 15px;
-      padding: 1rem 2.5rem;
-      transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.4s ease, color 0.4s ease;
-    }
-    .form-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,0,0,0.18); }
-    .form-submit:active { transform: scale(0.96); }
-    body.dark .form-submit { background: #fff; color: #000; }
-    .form-status { margin-top: 1rem; font-size: 14px; display: none; }
-    .form-status.show { display: block; }
-    .form-note { font-size: 12px; opacity: 0.55; margin-top: 1rem; line-height: 1.5; }
-    .form-note a, .contact-info a { text-decoration: underline; text-underline-offset: 3px; }
-
     /* Contact info under CTA */
     .contact-info {
       text-align: center;
@@ -769,58 +621,6 @@
       <div class="pill-wrap" style="--cbg:#ff6b35; --cfg:#fff;"><button class="pill" data-name="Websites"></button></div>
     </div>
 
-    <!-- About -->
-    <section class="about-section" id="o-nas">
-      <div class="section-head">
-        <h2 class="clients-title brand-text">Czym się zajmujemy</h2>
-      </div>
-      <p class="about-lead">Breezy Ads to studio performance marketingu z Warszawy. Prowadzimy kampanie Google Ads - Search, Shopping, Performance Max i Display - dla małych i średnich firm w Polsce. Wspieramy klientów także w Meta Ads, TikTok Ads i LinkedIn Ads.</p>
-      <p class="about-sub">Współpracujemy w modelu miesięcznego abonamentu: przejmujemy pełną obsługę kampanii - od strategii i konfiguracji konta, przez bieżącą optymalizację stawek i budżetów, po przejrzyste raporty wyników (ROAS, koszt konwersji). W codziennej pracy korzystamy z własnego, wewnętrznego narzędzia opartego o Google Ads API, które automatyzuje raportowanie i kontrolę budżetów w całym portfolio klientów.</p>
-      <div class="stats-row">
-        <div>
-          <div class="stat-num">6+</div>
-          <div class="stat-label">lat doświadczenia w paid media</div>
-        </div>
-        <div>
-          <div class="stat-num">15+</div>
-          <div class="stat-label">aktywnych klientów</div>
-        </div>
-        <div>
-          <div class="stat-num">200 000+</div>
-          <div class="stat-label">PLN miesięcznych budżetów reklamowych</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Services -->
-    <section class="services-section" id="uslugi">
-      <div class="section-head">
-        <h2 class="clients-title brand-text">Zakres usług</h2>
-      </div>
-      <div>
-        <div class="service-row">
-          <span class="service-num">01</span>
-          <h3 class="service-name brand-text">Google Ads</h3>
-          <p class="service-desc">Kampanie Search, Shopping, Performance Max i Display: konfiguracja konta, struktura kampanii, optymalizacja stawek i budżetów oraz feedy produktowe w Merchant Center.</p>
-        </div>
-        <div class="service-row">
-          <span class="service-num">02</span>
-          <h3 class="service-name brand-text">Social Ads</h3>
-          <p class="service-desc">Kampanie Meta Ads (Facebook i Instagram), TikTok Ads oraz LinkedIn Ads - od przygotowania kreacji po optymalizację pod sprzedaż i pozyskiwanie leadów B2B i B2C.</p>
-        </div>
-        <div class="service-row">
-          <span class="service-num">03</span>
-          <h3 class="service-name brand-text">Analityka i raporty</h3>
-          <p class="service-desc">Wdrożenia GA4 i Google Tag Managera, mierzenie konwersji oraz cotygodniowe i miesięczne raporty wyników z jasnymi rekomendacjami.</p>
-        </div>
-        <div class="service-row">
-          <span class="service-num">04</span>
-          <h3 class="service-name brand-text">Strony i kreacje</h3>
-          <p class="service-desc">Strony internetowe, banery i materiały wideo projektowane pod skuteczne kampanie reklamowe.</p>
-        </div>
-      </div>
-    </section>
-
     <!-- Clients carousel -->
     <section class="clients-section">
       <div class="clients-header">
@@ -849,7 +649,7 @@
     <!-- Contact CTA -->
     <section class="contact-section">
       <div class="contact-wrap">
-        <a class="contact-cta" id="contactCta" href="mailto:adwords2911@gmail.com?subject=Wsp%C3%B3%C5%82praca%20z%20Breezy%20Ads">
+        <a class="contact-cta" id="contactCta" href="mailto:michalzborowski97@gmail.com?subject=Wsp%C3%B3%C5%82praca%20z%20Breezy%20Ads">
           <span class="mail-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="5" width="18" height="14" rx="2"/>
@@ -861,39 +661,10 @@
       </div>
     </section>
 
-    <!-- Contact form -->
-    <section class="form-section" id="kontakt">
-      <div class="form-card">
-        <h2 class="form-title brand-text">Napisz do nas</h2>
-        <p class="form-sub">Opowiedz nam o swoim projekcie - odpowiadamy w ciągu 24 godzin w dni robocze.</p>
-        <form name="kontakt" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field" id="contactForm">
-          <input type="hidden" name="form-name" value="kontakt" />
-          <p style="display:none"><label>Nie wypełniaj tego pola: <input name="bot-field" /></label></p>
-          <div class="form-field">
-            <label for="cf-name">Imię i nazwisko</label>
-            <input id="cf-name" type="text" name="name" required placeholder="Jan Kowalski" autocomplete="name" />
-          </div>
-          <div class="form-field">
-            <label for="cf-email">Adres e-mail</label>
-            <input id="cf-email" type="email" name="email" required placeholder="jan@twojafirma.pl" autocomplete="email" />
-          </div>
-          <div class="form-field">
-            <label for="cf-message">Wiadomość</label>
-            <textarea id="cf-message" name="message" required placeholder="Opisz swój projekt lub zadaj pytanie..."></textarea>
-          </div>
-          <div style="text-align:center">
-            <button type="submit" class="form-submit">Wyślij wiadomość</button>
-            <p class="form-status" id="formStatus" role="status"></p>
-            <p class="form-note">Wysyłając formularz akceptujesz naszą <a href="/polityka-prywatnosci.html">politykę prywatności</a>.</p>
-          </div>
-        </form>
-      </div>
-    </section>
-
     <!-- Contact info -->
     <p class="contact-info">
       Breezy Ads - studio performance marketingu · Warszawa, Polska<br />
-      <a href="mailto:adwords2911@gmail.com">adwords2911@gmail.com</a> · <a href="/polityka-prywatnosci.html">Polityka prywatności</a>
+      <a href="mailto:michalzborowski97@gmail.com">michalzborowski97@gmail.com</a>
     </p>
 
     <!-- Bottom bar -->
@@ -1213,34 +984,6 @@
         }
       });
     });
-
-    // Contact form: AJAX submit to Netlify Forms with inline status message
-    (function() {
-      const form = document.getElementById('contactForm');
-      const status = document.getElementById('formStatus');
-      if (!form || !status) return;
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        status.className = 'form-status';
-        const btn = form.querySelector('.form-submit');
-        btn.disabled = true;
-        try {
-          const data = new FormData(form);
-          const res = await fetch('/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams(data).toString(),
-          });
-          if (!res.ok) throw new Error('send failed');
-          form.reset();
-          status.textContent = 'Dziękujemy! Twoja wiadomość została wysłana - odezwiemy się wkrótce.';
-        } catch (err) {
-          status.textContent = 'Nie udało się wysłać wiadomości. Napisz do nas bezpośrednio: adwords2911@gmail.com';
-        }
-        status.classList.add('show');
-        btn.disabled = false;
-      });
-    })();
 
     // Símon-style sticky header underline: shows after scrolling past the top
     (() => {
